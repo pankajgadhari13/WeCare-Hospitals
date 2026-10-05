@@ -1,0 +1,92 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Patient user account profile and baseline health telemetry",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique Firebase Authentication UID" },
+        "name": { "type": "string", "description": "Patient full legal name" },
+        "email": { "type": "string", "format": "email", "description": "Patient email address" },
+        "phone": { "type": "string", "description": "Patient phone number" },
+        "age": { "type": "number", "description": "Patient age in years" },
+        "gender": { "type": "string", "enum": ["male", "female", "other"], "description": "Biological or identified gender" },
+        "bloodGroup": { "type": "string", "description": "Blood group code e.g. O+, A+, B+, AB-" },
+        "emergencyContact": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "relation": { "type": "string" },
+            "phone": { "type": "string" }
+          }
+        },
+        "vitals": {
+          "type": "object",
+          "properties": {
+            "bloodPressure": { "type": "string" },
+            "heartRate": { "type": "number" },
+            "oxygenSaturation": { "type": "number" },
+            "bloodSugar": { "type": "number" },
+            "weightKg": { "type": "number" },
+            "lastUpdated": { "type": "string" }
+          }
+        },
+        "allergies": { "type": "array", "description": "Known allergies" },
+        "chronicConditions": { "type": "array", "description": "Pre-existing health conditions" },
+        "createdAt": { "type": "string", "description": "Account registration timestamp" },
+        "updatedAt": { "type": "string", "description": "Last profile update timestamp" }
+      },
+      "required": ["uid", "name", "email"]
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Hospital doctor outpatient consultation reservation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique appointment identifier" },
+        "patientId": { "type": "string", "description": "Firebase Auth UID of the patient" },
+        "patientName": { "type": "string", "description": "Patient full legal name" },
+        "patientEmail": { "type": "string", "format": "email", "description": "Patient email address" },
+        "patientPhone": { "type": "string", "description": "Patient contact number" },
+        "doctorId": { "type": "string", "description": "Consulting doctor identifier" },
+        "doctorName": { "type": "string", "description": "Full name of the consulting physician" },
+        "specialization": { "type": "string", "description": "Doctor clinical specialization" },
+        "department": { "type": "string", "description": "Medical department name" },
+        "appointmentDate": { "type": "string", "description": "Consultation date YYYY-MM-DD" },
+        "appointmentTime": { "type": "string", "description": "Time slot string e.g. 09:30 AM" },
+        "consultationFee": { "type": "number", "description": "Doctor consultation fee" },
+        "reason": { "type": "string", "description": "Reason for visit or chief complaint" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "rescheduled", "cancelled", "completed"], "description": "Current appointment status" },
+        "adminNote": { "type": "string", "description": "Administrative remarks by hospital staff" },
+        "createdAt": { "type": "string", "description": "Creation timestamp or serverTimestamp" },
+        "userId": { "type": "string", "description": "Firebase Auth UID of the patient (compatibility)" },
+        "userEmail": { "type": "string", "format": "email", "description": "Email of the booking user" },
+        "bookingRef": { "type": "string", "description": "Human-readable booking reference e.g. WCH-2026-XXXX" },
+        "doctorTitle": { "type": "string", "description": "Specialist title e.g. Senior Consultant Cardiologist" },
+        "doctorPhoto": { "type": "string", "description": "Doctor portrait URL" },
+        "departmentId": { "type": "string", "description": "Medical department ID" },
+        "departmentName": { "type": "string", "description": "Department name" },
+        "patientAge": { "type": "number", "description": "Patient age in years" },
+        "patientGender": { "type": "string", "enum": ["male", "female", "other"], "description": "Patient gender" },
+        "date": { "type": "string", "description": "Consultation date YYYY-MM-DD" },
+        "timeSlot": { "type": "string", "description": "Time slot string e.g. 09:30 AM" },
+        "period": { "type": "string", "enum": ["morning", "afternoon", "evening"] },
+        "consultationType": { "type": "string", "enum": ["in-person", "video"] },
+        "bookedAt": { "type": "string", "description": "Timestamp when the booking was made" },
+        "paymentMode": { "type": "string", "enum": ["hospital-counter", "online-paid"] },
+        "opdRoom": { "type": "string", "description": "OPD clinic room location" }
+      },
+      "required": ["patientId", "patientName", "patientEmail", "patientPhone", "doctorId", "doctorName", "appointmentDate", "appointmentTime", "consultationFee", "reason", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and clinical emergency details"
+    },
+    "/appointments/{appointmentId}": {
+      "schema": "Appointment",
+      "description": "Doctor outpatient consultation bookings tied to users"
+    }
+  }
+}
